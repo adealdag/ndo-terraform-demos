@@ -9,5 +9,5 @@ data "mso_site" "site2" {
 
 # NDO Users
 data "mso_user" "current_user" {
-  username = "admin"
+  username = var.mso_username
 }
