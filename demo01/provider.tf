@@ -6,7 +6,7 @@ terraform {
     }
     mso = {
       source  = "CiscoDevNet/mso"
-      version = "~> 0.3.0"
+      version = "~> 0.4.1"
     }
     vsphere = {
       source  = "hashicorp/vsphere"
@@ -39,6 +39,7 @@ provider "mso" {
   url      = var.mso_url
   insecure = true
   platform = "nd"
+  domain   = "dcmdr1"
 }
 
 provider "vsphere" {
