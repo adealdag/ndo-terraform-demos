@@ -157,5 +157,6 @@ resource "mso_schema_template_external_epg_subnet" "default_l3epg" {
   external_epg_name = mso_schema_template_external_epg.default_l3epg.external_epg_name
   ip                = "0.0.0.0/0"
   name              = "default"
+  scope             = ["import-security"]
 }
 
