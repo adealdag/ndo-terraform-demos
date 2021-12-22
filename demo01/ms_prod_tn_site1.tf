@@ -2,7 +2,7 @@
 # Template level
 resource "mso_schema_template_bd" "bd3" {
   schema_id              = mso_schema.ms_prod.id
-  template_name          = local.site1_template_name
+  template_name          = mso_schema_template.ms_prod_site1_only.name
   name                   = "10_10_30_0_24_bd"
   display_name           = "10_10_30_0_24_bd"
   vrf_name               = mso_schema_template_vrf.prod.name
@@ -12,7 +12,7 @@ resource "mso_schema_template_bd" "bd3" {
 
 resource "mso_schema_template_bd_subnet" "bd3net" {
   schema_id          = mso_schema.ms_prod.id
-  template_name      = local.site1_template_name
+  template_name      = mso_schema_template.ms_prod_site1_only.name
   bd_name            = mso_schema_template_bd.bd3.name
   ip                 = "10.10.30.1/24"
   scope              = "private"
@@ -25,14 +25,14 @@ resource "mso_schema_template_bd_subnet" "bd3net" {
 # Template level
 resource "mso_schema_template_anp" "demo_app_s1" {
   schema_id    = mso_schema.ms_prod.id
-  template     = local.site1_template_name
+  template     = mso_schema_template.ms_prod_site1_only.name
   name         = "demo_app"
   display_name = "demo_app"
 }
 
 resource "mso_schema_template_anp_epg" "demo_db_epg" {
   schema_id       = mso_schema.ms_prod.id
-  template_name   = local.site1_template_name
+  template_name   = mso_schema_template.ms_prod_site1_only.name
   anp_name        = mso_schema_template_anp.demo_app.name
   name            = "database_epg"
   display_name    = "database_epg"
@@ -44,7 +44,7 @@ resource "mso_schema_template_anp_epg" "demo_db_epg" {
 # Site level
 resource "mso_schema_site_anp_epg_domain" "demo_db_epg_s1_vmm" {
   schema_id            = mso_schema.ms_prod.id
-  template_name        = local.site1_template_name
+  template_name        = mso_schema_template.ms_prod_site1_only.name
   site_id              = data.mso_site.site1.id
   anp_name             = mso_schema_template_anp.demo_app.name
   epg_name             = mso_schema_template_anp_epg.demo_db_epg.name
