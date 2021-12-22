@@ -18,9 +18,9 @@ resource "mso_tenant" "demo" {
     site_id = data.mso_site.site2.id
   }
 
-  # user_associations {
-  #   user_id = data.mso_user.current_user.id
-  # }
+  user_associations {
+    user_id = data.mso_user.current_user.id
+  }
 }
 
 # Schema and Templates
