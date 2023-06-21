@@ -26,11 +26,11 @@ variable "site2_id" {
 
 # Domains
 variable "vmm_site1" {
-  description = "Name of VMM domain in ACI Site 1"
+  description = "DN of VMM domain in ACI Site 1"
 }
 
 variable "vmm_site2" {
-  description = "Name of VMM domain in ACI Site 2"
+  description = "DN of VMM domain in ACI Site 2"
 }
 
 # L3Out
