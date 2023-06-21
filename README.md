@@ -1,6 +1,6 @@
 ## Summary
 
-This repository contains a set of different examples of Terraform configuration files for automating Cisco NDO that were used during the **Automating Nexus Dashboard Orchestrator** webinar delivered in EMEAR.
+This repository contains a set of different examples of Terraform configuration files for automating Cisco NDO that were used during the **Automating Nexus Dashboard Orchestrator** webinar delivered in EMEA.
 
 ## Backend and Credentials
 
@@ -9,7 +9,7 @@ Examples included here use Terraform OSS (CLI) and local backend, and hence stat
 ## Demos
 
 ### Demo 01
-This demo deploys a basic configuration on NDO, consisting on a tenand, a schema, a set of templates, and several objects inside each of the templates. Finally, the templates are deployed.
+This demo deploys a basic configuration on NDO, consisting on a tenant, a schema, a set of templates, and several objects inside each of the templates. Finally, the templates are deployed.
 
 However, this demo presents an issue on purpose: template deployment will not be the last resource to run, resulting in a configuration that will only be partially deployed. Following demos will resolve this issue.
 
