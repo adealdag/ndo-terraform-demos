@@ -2,13 +2,13 @@ locals {
   stretched_template_name = "stretched"
   site1_template_name     = "${lower(var.site1)}_only"
   site2_template_name     = "${lower(var.site2)}_only"
-  templates_deploy        = false
+  templates_redeploy      = false
 }
 
 # Create Tenant
 resource "mso_tenant" "demo" {
-  name         = "ms_tf_demo_tn"
-  display_name = "ms_tf_demo_tn"
+  name         = "terraform_ndo_demo"
+  display_name = "terraform_ndo_demo"
 
   site_associations {
     site_id = data.mso_site.site1.id
@@ -25,76 +25,70 @@ resource "mso_tenant" "demo" {
 
 # Schema and Templates
 resource "mso_schema" "ms_prod" {
-  name          = "ms_tf_demo_schema"
-  template_name = local.stretched_template_name
-  tenant_id     = mso_tenant.demo.id
-}
+  name = "terraform_ndo_demo_schema"
 
-resource "mso_schema_template" "ms_prod_site1_only" {
-  schema_id    = mso_schema.ms_prod.id
-  name         = local.site1_template_name
-  display_name = local.site1_template_name
-  tenant_id    = mso_tenant.demo.id
-}
-
-resource "mso_schema_template" "ms_prod_site2_only" {
-  schema_id    = mso_schema.ms_prod.id
-  name         = local.site2_template_name
-  display_name = local.site2_template_name
-  tenant_id    = mso_tenant.demo.id
+  template {
+    name         = local.stretched_template_name
+    display_name = local.stretched_template_name
+    tenant_id    = mso_tenant.demo.id
+  }
+  template {
+    name         = local.site1_template_name
+    display_name = local.site1_template_name
+    tenant_id    = mso_tenant.demo.id
+  }
+  template {
+    name         = local.site2_template_name
+    display_name = local.site2_template_name
+    tenant_id    = mso_tenant.demo.id
+  }
 }
 
 resource "mso_schema_site" "schema_site_1_tpl1" {
-  schema_id     = mso_schema.ms_prod.id
-  site_id       = data.mso_site.site1.id
-  template_name = mso_schema.ms_prod.template_name
+  schema_id           = mso_schema.ms_prod.id
+  site_id             = data.mso_site.site1.id
+  template_name       = local.stretched_template_name
+  undeploy_on_destroy = true
 }
 
 resource "mso_schema_site" "schema_site_1_tpl2" {
-  schema_id     = mso_schema.ms_prod.id
-  site_id       = data.mso_site.site1.id
-  template_name = mso_schema_template.ms_prod_site1_only.id
+  schema_id           = mso_schema.ms_prod.id
+  site_id             = data.mso_site.site1.id
+  template_name       = local.site1_template_name
+  undeploy_on_destroy = true
 }
 
 resource "mso_schema_site" "schema_site_2_tpl1" {
-  schema_id     = mso_schema.ms_prod.id
-  site_id       = data.mso_site.site2.id
-  template_name = mso_schema.ms_prod.template_name
+  schema_id           = mso_schema.ms_prod.id
+  site_id             = data.mso_site.site2.id
+  template_name       = local.stretched_template_name
+  undeploy_on_destroy = true
 }
 
 resource "mso_schema_site" "schema_site_2_tpl2" {
-  schema_id     = mso_schema.ms_prod.id
-  site_id       = data.mso_site.site2.id
-  template_name = mso_schema_template.ms_prod_site2_only.id
+  schema_id           = mso_schema.ms_prod.id
+  site_id             = data.mso_site.site2.id
+  template_name       = local.site2_template_name
+  undeploy_on_destroy = true
 }
 
 # Deploy templates
-resource "mso_schema_template_deploy" "template_stretched_s1_deployer" {
+resource "mso_schema_template_deploy_ndo" "template_stretched_deployer" {
   schema_id     = mso_schema.ms_prod.id
-  template_name = mso_schema.ms_prod.template_name
-  site_id       = data.mso_site.site1.id
-  undeploy      = !local.templates_deploy
+  template_name = local.stretched_template_name
+  re_deploy     = local.templates_redeploy
 }
 
-resource "mso_schema_template_deploy" "template_stretched_s2_deployer" {
+resource "mso_schema_template_deploy_ndo" "template_local_s1_deployer" {
   schema_id     = mso_schema.ms_prod.id
-  template_name = mso_schema.ms_prod.template_name
-  site_id       = data.mso_site.site2.id
-  undeploy      = !local.templates_deploy
+  template_name = local.site1_template_name
+  re_deploy     = local.templates_redeploy
 }
 
-resource "mso_schema_template_deploy" "template_local_s1_deployer" {
+resource "mso_schema_template_deploy_ndo" "template_local_s2_deployer" {
   schema_id     = mso_schema.ms_prod.id
-  template_name = mso_schema_template.ms_prod_site1_only.id
-  site_id       = data.mso_site.site1.id
-  undeploy      = !local.templates_deploy
-}
-
-resource "mso_schema_template_deploy" "template_local_s2_deployer" {
-  schema_id     = mso_schema.ms_prod.id
-  template_name = mso_schema_template.ms_prod_site2_only.id
-  site_id       = data.mso_site.site2.id
-  undeploy      = !local.templates_deploy
+  template_name = local.site2_template_name
+  re_deploy     = local.templates_redeploy
 }
 
 
